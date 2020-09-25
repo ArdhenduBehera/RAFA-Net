@@ -1,5 +1,5 @@
 # RAFA-NET
-Code used in the research of estimating head pose orientation from RGB images
+Code used in the research of estimating head pose orientation from RGB images.
 ![RAFA-NET Model Overview](https://github.com/ZWharton15/RAFA-NET-1/blob/master/doc/RAFA_model_overview.png?raw=true)
 
 
