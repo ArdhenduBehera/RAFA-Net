@@ -28,5 +28,6 @@ The model can be created by running:
 ```
 python train_rafa-net.py
 ```
+By default the model will train on 300W-LP and test on AFLW2000 (Line number 350-354 in train_rafa-net.py).
 
 ## Citation
