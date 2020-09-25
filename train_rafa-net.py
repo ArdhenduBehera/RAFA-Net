@@ -355,7 +355,15 @@ if __name__ == '__main__':
     train_files, train_labels, train_Bbox = load_image_files_and_labels(train_image, train_label)
     test_files, test_labels, test_Bbox = load_image_files_and_labels(test_image, test_label)
    
-
+    try:
+        os.mkdir("Metrics")
+    except:
+        pass
+        
+    try:
+        os.mkdir("TrainedModels")
+    except:
+        pass
 
     input_tensor = layers.Input(shape=(224, 224, 3))
     nb_classes = 5 #number of image classes
