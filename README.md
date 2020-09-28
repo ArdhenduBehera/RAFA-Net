@@ -1,10 +1,10 @@
 # RAFA-NET
 Code used in the research of estimating head pose orientation from RGB images.
-![RAFA-NET Model Overview](https://github.com/ZWharton15/RAFA-NET-1/blob/master/doc/RAFA_model_overview.png?raw=true)
+<kbd>![RAFA-NET Model Overview](https://github.com/ZWharton15/RAFA-NET-1/blob/master/doc/RAFA_model_overview.png?raw=true)</kbd>
 
-![AFLW validation results](https://github.com/ZWharton15/RAFA-NET-1/blob/master/doc/Table1.JPG?raw=true)
-![BIWI validation results](https://github.com/ZWharton15/RAFA-NET-1/blob/master/doc/Table2.JPG?raw=true)
-![Grad-CAM Output](https://github.com/ZWharton15/RAFA-NET-1/blob/master/doc/Grad-CAM.png?raw=true)
+<kbd>![AFLW validation results](https://github.com/ZWharton15/RAFA-NET-1/blob/master/doc/Table1.JPG?raw=true)</kbd>
+<kbd>![BIWI validation results](https://github.com/ZWharton15/RAFA-NET-1/blob/master/doc/Table2.JPG?raw=true)</kbd>
+<kbd>![Grad-CAM Output](https://github.com/ZWharton15/RAFA-NET-1/blob/master/doc/Grad-CAM.png?raw=true)</kbd>
 
 ## Paper
 {Upload PDF}
