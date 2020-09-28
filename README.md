@@ -1,5 +1,5 @@
 # RAFA-NET
-Code used in the research of estimating head pose orientation from RGB images.
+Code used in the research of estimating head pose orientation from RGB images. Code to build and train RAFA-Net are provided. The model takes an input image with a face bounding box and outputs the yaw, pitch and roll of the persons head in radians.
 
 <kbd>![RAFA-NET Model Overview](https://github.com/ZWharton15/RAFA-NET-1/blob/master/doc/RAFA_model_overview.png?raw=true)</kbd>
 
