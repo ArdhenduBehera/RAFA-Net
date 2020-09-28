@@ -1,9 +1,13 @@
 # RAFA-NET
 Code used in the research of estimating head pose orientation from RGB images.
+
 <kbd>![RAFA-NET Model Overview](https://github.com/ZWharton15/RAFA-NET-1/blob/master/doc/RAFA_model_overview.png?raw=true)</kbd>
 
+## Published Results
 <kbd>![AFLW validation results](https://github.com/ZWharton15/RAFA-NET-1/blob/master/doc/Table1.JPG?raw=true)</kbd>
 <kbd>![BIWI validation results](https://github.com/ZWharton15/RAFA-NET-1/blob/master/doc/Table2.JPG?raw=true)</kbd>
+
+## Grad-CAM outputs of the 3 angles
 <kbd>![Grad-CAM Output](https://github.com/ZWharton15/RAFA-NET-1/blob/master/doc/Grad-CAM.png?raw=true)</kbd>
 
 ## Paper
@@ -24,7 +28,7 @@ pip install -r requirements.txt
 * SelfAttention 0.46.0
 * scikit-learn
 
-### Data
+### Datasets
 3 datasets were used:
 * 300W-LP & AFLW2000 - http://www.cbsr.ia.ac.cn/users/xiangyuzhu/projects/3DDFA/main.htm
 * BIWI - https://www.kaggle.com/kmader/biwi-kinect-head-pose-database
@@ -39,3 +43,6 @@ python train_rafa-net.py
 By default the model will train on 300W-LP and test on AFLW2000 (Line number 350-354 in train_rafa-net.py).
 
 ## Citation
+```
+Behera, A., Wharton, Z., Hewage, P., Kumar, S., 2020. Rotation Axis Focused Attention Network (RAFA-Net) for Estimating Head Pose. In: Asian Confernce on Computer Vision 2020, 30 Nov-4 Dec 2020.
+```
