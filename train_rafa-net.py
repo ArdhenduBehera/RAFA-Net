@@ -23,11 +23,14 @@ from keras.applications.resnet50 import preprocess_input as res50_pp_input
 from pose_data_augmentor import DirectoryDataGenerator
 from custom_validate_callback import CustomCallback
 from keras.applications.resnet50 import ResNet50
-#from SelfAttentionGoogleBrain import SelfAttentionGoogleBrain
 from SelfAttention import SelfAttention
 from SpectralNormalizationKeras import ConvSN2D
-from keras_self_attention import SeqWeightedAttention as Attention
-from keras_self_attention import SeqSelfAttention 
+#from keras_self_attention import SeqWeightedAttention as Attention
+#from keras_self_attention import SeqSelfAttention 
+
+from attentional_spatial_pooling import WeightedAttention as Attention
+from attentional_spatial_pooling import AttentionalPooling as SeqSelfAttention
+
 
 working_dir = os.path.dirname(os.path.realpath(__file__))
 model_name = "{}_bs{}".format(sys.argv[0].split(".")[0], 16)
@@ -208,153 +211,16 @@ def load_image_files_and_labels(image_path, label_path, radian=True):
         
     return files, labels, Bbox
         
-def crop_image_black_border(image_path, label_path, border_width):
-    img_list = open(image_path).readlines()	#'./AFLW_meta.tsv'
-    label_list = open(label_path).readlines()
-    data = []
-    for index in range(122377,122378):
-    #for index in range(len(img_list)):
-        if(index % 5000 == 0):
-            print(str(index) + "	Hit!")
-        line_image = img_list[index]
-        line_label = label_list[index]
-        
-        items = line_image.split('\t')
-        if (len(items) != 2 or items[1]==' \n' or items[1]=='\n'):
-            continue
-        #print(items[0])
-        img_dir = os.path.join('./', items[0][2:])
-        print(img_dir)
-        img = cv2.imread(img_dir)
-        #try:
-        x_set = int(items[1].split(' ')[1])
-        y_set = int(items[1].split(' ')[0])
-		 #except Exception as e:
-		 #print(img_dir, items[1])
-        if (x_set<0 or y_set<0):
-             continue
-         
-        offset = int(float(items[1].split(' ')[2]))
-        if (np.float(border_width) == 0):
-            _offset = 0
-        else:
-            _offset = int(offset*np.float32(border_width))
-        x_start = x_set + offset
-        y_start = y_set + offset
-        x_end = x_start + offset
-        y_end = y_start + offset
-        print('offset:', offset, '_offset:',_offset, 'x_set', x_set, 'y_set', y_set)
-        print('x_start:', x_start, 'y_start:',y_start, 'x_end', x_end, 'y_end', y_end)
-        print('y:', y_start - _offset, 'y2:', y_end + _offset, 'x:', x_start - _offset, 'x1:', x_end + _offset)
-        #print(y_set)
-        #print(x_end)
-        #print(y_end)
-        #input()
-        
-        src = cv2.copyMakeBorder(img, offset, offset, offset, offset, cv2.BORDER_CONSTANT, value=[0,0,0])
-        tmp_image = src[y_start - _offset : y_end + _offset, x_start - _offset : x_end + _offset, :]
-        tmp_image = cv2.resize(tmp_image, (224,224))
-        
-        cv2.imshow('image', tmp_image)
-        #cv2.rectangle(src,(x_set,y_set),(x_set+offset, y_set+offset),(0,255,0))
-        cv2.imshow('image 1', src)
-        cv2.rectangle(img,(x_set,y_set),(x_set+offset, y_set+offset),(0,255,0))
-        cv2.rectangle(img,(x_start,y_start),(x_end, y_end),(0,0,255))
-        cv2.imshow('image 2', img)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
-        '''continue;
-        
-        items_label = line_label.split('\t')
-        R_Angle = np.float32(items_label[1])
-        P_Angle = np.float32(items_label[2])
-        Y_Angel = np.float32(items_label[3])
-        R_Class = np.float32(items_label[4])
-        P_Class = np.float32(items_label[5])
-        Y_Class = np.float32(items_label[6][:-1])
-        
-        
-        data.append([tmp_image, np.array([R_Angle, P_Angle, Y_Angel, R_Class, P_Class, Y_Class])])
-        '''
-    return data
-
-
-def crop_image_black_border_val(image_path, label_path, border_width):
-        img_list = open(image_path).readlines() #'./AFLW_meta.tsv'
-        label_list = open(label_path).readlines()
-        data = []
-        label = []
-
-        for index in range(len(img_list)):
-                if(index % 5000 == 0):
-                        print(str(index) + "    Hit!")
-                line_image = img_list[index]
-                line_label = label_list[index]
-
-                items = line_image.split('\t')
-#               if (len(items) != 2 or items[1]==' \n' or items[1]=='\n'):
-#                       continue
-                img_dir = os.path.join('./', items[0])
-                img = cv2.imread(img_dir)
-                try:
-                        x_set = int(items[1].split(' ')[1])
-                        y_set = int(items[1].split(' ')[0])
-                except Exception as e:
-                        print(img_dir, items[1])
-
-                if (x_set<0 or y_set<0):
-                        continue 
-                
-                offset = int(float(items[1].split(' ')[2]))
-                if (np.float(border_width) == 0):
-                        _offset = 0
-                else:
-                        _offset = int(offset / np.float32(border_width))
-                x_start = x_set + offset
-                y_start = y_set + offset
-                x_end = x_start + offset
-                y_end = y_start + offset
-
-                src = cv2.copyMakeBorder(img, offset, offset, offset, offset, cv2.BORDER_CONSTANT, value=[0,0,0])
-
-                tmp_image = src[y_start - _offset : y_end + _offset, x_start - _offset : x_end + _offset, :]
-
-                tmp_image = cv2.resize(tmp_image, (224,224))
-
-                items_label = line_label.split('\t')
-                R_Angle = np.float32(items_label[1])* math.pi /180
-                P_Angle = np.float32(items_label[2])* math.pi /180
-                Y_Angel = np.float32(items_label[3])* math.pi /180
-
-                data.append(tmp_image)
-                label.append(np.array([R_Angle, P_Angle, Y_Angel]))
-        return data, label
-
-def epoch_decay(epoch):
-    my_lr = K.eval(model.optimizer.lr)
-    if epoch % 25 == 0 and not epoch == 0:
-       my_lr = my_lr / 10
-    '''
-    if epoch >= 24:
-        my_lr = 0.00001
-    if epoch >= 49:
-        my_lr = 0.000001
-    if epoch >= 74:
-        my_lr = 0.0000001
-    '''
-    print("EPOCH: ", epoch, "NEW LR: ", my_lr)
-    return my_lr
-
 
 if __name__ == '__main__':
     train_image = '300wcrop.txt'	
     train_label = '300w_euler_cls.txt'
     test_image = 'Aflw2000crop.txt'
     test_label = 'Aflw2000_euler_cls.txt'
-        
+    
     train_files, train_labels, train_Bbox = load_image_files_and_labels(train_image, train_label)
     test_files, test_labels, test_Bbox = load_image_files_and_labels(test_image, test_label)
-   
+    
     try:
         os.mkdir("Metrics")
     except:
@@ -528,12 +394,10 @@ if __name__ == '__main__':
     lossWeights = {"Yaw_output": 1.0, "Pitch_output": 1.0, "Roll_output": 1.0}
     
     model = Model(inputs=model.input, outputs=[x,y,z])
-    model.summary()
-    
-    #from keras.utils import multi_gpu_model
-    #model = multi_gpu_model(model, gpus=2)
     model.compile(loss=losses, loss_weights=lossWeights, metrics=metrics, optimizer=optimizer)
     model.summary()
+    
+    
     
     train_dg = DirectoryDataGenerator(train_files, train_labels, train_Bbox, target_sizes=image_size, augmentor=True,
                                       preprocessors=res50_pp_input, batch_size=batch_size, shuffle=True, verbose=verbose) #format training data
@@ -544,7 +408,10 @@ if __name__ == '__main__':
 
     model.fit_generator(train_dg, steps_per_epoch=nb_train_samples // batch_size,  epochs=epochs, callbacks=[checkpointer, csv_logger, CustomCallback(val_dg, validation_steps, output_model_filename)]) #train and validate the model
 
+    
     model.save(output_model_dir + output_model_filename) #save the final model
+    
+    
     del model
     K.clear_session()
 
