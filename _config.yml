@@ -1,5 +1,5 @@
 theme: jekyll-theme-cayman
-title: Context-aware Attentional Pooling (CAP) for Fine-grained Visual Classification
-description: The Thirty-Fifth AAAI Conference on Artificial Intelligence 2021
+title: Rotation Axis Focused Attention Network (RAFA-Net) for Estimating Head Pose
+description:  15th Asian Conference on Computer Vision (ACCV) 2020
 github:
   is_project_page: false
